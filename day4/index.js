@@ -35,13 +35,8 @@ const xmasFrom = (line, column, board) => {
 
 const board = inputLines().map(line => line.split(''))
 
-let result = 0;
-for(let line = 0; line < board.length; line++) {
-  for(let column = 0; column < board[0].length; column++) {
-    const char = board[line][column]
-    if (char !== 'X') continue
-    result += xmasFrom(line, column, board)
-  }
-}
+const result = board.reduce((acc, line, lineIndex) =>
+  line.reduce((lineAcc, char, columnIndex) => char === 'X' ? lineAcc + xmasFrom(lineIndex, columnIndex, board) : lineAcc, acc)
+, 0)
 
 console.log(result)
