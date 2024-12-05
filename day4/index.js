@@ -4,31 +4,16 @@ const readFile = path => fs.readFileSync(path).toString()
 const inputLines = (separator = '\n') => readFile('input').split(separator)
 
 const xmasFrom = (row, column, board) => {
-  const possibilities = []
-
-  if (column + 3 < board.length)
-    possibilities.push(`${board[row][column]}${board[row][column+1]}${board[row][column+2]}${board[row][column+3]}`)
-
-  if (column - 3 >= 0)
-    possibilities.push(`${board[row][column]}${board[row][column-1]}${board[row][column-2]}${board[row][column-3]}`)
-
-  if (row + 3 < board.length)
-    possibilities.push(`${board[row][column]}${board[row+1][column]}${board[row+2][column]}${board[row+3][column]}`)
-
-  if (row - 3 >= 0 )
-    possibilities.push(`${board[row][column]}${board[row-1][column]}${board[row-2][column]}${board[row-3][column]}`)
-
-  if (row + 3 < board.length && column + 3 < board.length)
-    possibilities.push(`${board[row][column]}${board[row+1][column+1]}${board[row+2][column+2]}${board[row+3][column+3]}`)
-
-  if (row - 3 >= 0 && column + 3 < board.length)
-    possibilities.push(`${board[row][column]}${board[row-1][column+1]}${board[row-2][column+2]}${board[row-3][column+3]}`)
-
-  if (row + 3 < board.length && column - 3 >= 0)
-    possibilities.push(`${board[row][column]}${board[row+1][column-1]}${board[row+2][column-2]}${board[row+3][column-3]}`)
-
-  if (row - 3 >= 0 && column - 3 >= 0)
-    possibilities.push(`${board[row][column]}${board[row-1][column-1]}${board[row-2][column-2]}${board[row-3][column-3]}`)
+  const possibilities = [
+    `${board[row]?.[column]}${board[row]?.[column+1]}${board[row]?.[column+2]}${board[row]?.[column+3]}`,
+    `${board[row]?.[column]}${board[row]?.[column-1]}${board[row]?.[column-2]}${board[row]?.[column-3]}`,
+    `${board[row]?.[column]}${board[row+1]?.[column]}${board[row+2]?.[column]}${board[row+3]?.[column]}`,
+    `${board[row]?.[column]}${board[row-1]?.[column]}${board[row-2]?.[column]}${board[row-3]?.[column]}`,
+    `${board[row]?.[column]}${board[row+1]?.[column+1]}${board[row+2]?.[column+2]}${board[row+3]?.[column+3]}`,
+    `${board[row]?.[column]}${board[row-1]?.[column+1]}${board[row-2]?.[column+2]}${board[row-3]?.[column+3]}`,
+    `${board[row]?.[column]}${board[row+1]?.[column-1]}${board[row+2]?.[column-2]}${board[row+3]?.[column-3]}`,
+    `${board[row]?.[column]}${board[row-1]?.[column-1]}${board[row-2]?.[column-2]}${board[row-3]?.[column-3]}`,
+  ]
 
   return possibilities.filter(p => p === 'XMAS' || p === 'SAMX').length
 }
