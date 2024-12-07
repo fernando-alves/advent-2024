@@ -17,41 +17,26 @@ const addRule = (rule, rules) => {
 
 const addUpdate = (update, updates) => [...updates, update.split(',').map(Number)]
 
-const isInRightOrder = (update, rules) => update.slice(1).every((entry, index) => update.slice(0, index + 1).every(p => !rules[entry]?.includes(p)))
+const fixUpdate = (update, rules) => update.toSorted((a, b) => {
+  if (a === b) return 0
+  if (rules[a]?.includes(b)) return -1
+  return 1
+})
 
-const checkCorrectness = (updates, rules) => updates.reduce(({ correct, incorrect }, update) => {
-  isInRightOrder(update, rules) ? correct.push(update) : incorrect.push(update)
+const isCorrect = (update, rules) => update.toString() === fixUpdate(update, rules).toString()
+
+const splitByCorrectness = (updates, rules) => updates.reduce(({ correct, incorrect }, update) => {
+  isCorrect(update, rules) ? correct.push(update) : incorrect.push(update)
   return { correct, incorrect }
 }, { correct: [], incorrect: [] })
 
 const sumMiddle = updates => updates.reduce((sum, update) => sum + update[Math.floor(update.length / 2)], 0)
 
-const swap = (update, i, j) => {
-  const swapped = [...update]
-  swapped[i] = update[j]
-  swapped[j] = update[i]
-  return swapped
-}
-
-const fixUpdate = update => {
-  for(let i = 0; i < update.length; i++) {
-    const entry = update[i]
-    const defectivePrecedent = update.slice(0, i).findIndex(p => rules[entry]?.includes(p))
-
-    if (defectivePrecedent >= 0) {
-      return fixUpdate(swap(update, i, defectivePrecedent))
-    }
-  }
-
-  return update
-}
-
 const { updates, rules } = rulesAndUpdates(inputLines())
-
-const { correct, incorrect } = checkCorrectness(updates, rules)
+const { correct, incorrect } = splitByCorrectness(updates, rules)
 
 console.log(sumMiddle(correct))
 
-const fixed = incorrect.map(fixUpdate)
+const fixed = incorrect.map(update => fixUpdate(update, rules))
 
 console.log(sumMiddle(fixed))
