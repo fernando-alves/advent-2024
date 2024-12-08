@@ -41,6 +41,8 @@ const initializeHistory = () => {
   }
 }
 
+const withinBoard = (board, position) => position.row < board.length && position.column < board.length
+
 const patrol = (guard, board) => {
   const history = initializeHistory()
 
@@ -54,7 +56,8 @@ const patrol = (guard, board) => {
 
     history.add(guard.position)
     guard.position = nextPosition
-  } while (guard.position.row < board.length && guard.position.column < board.length)
+
+  } while (withinBoard(board, guard.position))
 
   return history
 }
